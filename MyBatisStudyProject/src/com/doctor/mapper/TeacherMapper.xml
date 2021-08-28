@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.doctor.mapper.TeacherMapper">
+		<resultMap type="Teacher" id="TeacherResultMap">
+			<id property="teacherId" column="teacherId" javaType="int" jdbcType="NUMERIC"/>
+			<result property="teacherName" column="teacherName" javaType="String" jdbcType="VARCHAR"/>
+		</resultMap>
+		
+		<select id="selectTeacherById" parameterType="int" resultMap="TeacherResultMap">
+			SELECT teacherId,teacherName FROM teacher WHERE teacherId = #{teacherId}
+		</select>
+	</mapper>

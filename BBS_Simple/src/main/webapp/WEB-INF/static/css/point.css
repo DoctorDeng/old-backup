@@ -1,0 +1,17 @@
+body{
+    background-color: #ebeaea;
+}
+div.regist {
+    width: 1030px;
+    height: 600px;
+    margin-top: 60px;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 5px;
+    padding: 20px;
+    border: 2px solid #ebeaea;
+    background-color: white;
+}
+span.error {
+    color:red;
+}

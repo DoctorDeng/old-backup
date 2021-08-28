@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 将Mapper和对应的Dao绑定 -->
+<mapper namespace="vip.doctordeng.bbs.dao.TopicDao">
+	<sql id="defaultTopicSql">
+		topic_id,
+		topic_introduction,
+		topic_title,
+		topic_publish_time,
+		topic_content,
+		topic_type,
+		topic_view_num,
+		topic_status,
+		topic_good_num,
+		user_id,
+		forum_id,
+		prop1,
+		prop2,
+		prop3,
+		prop4,
+		prop5,
+		prop6,
+		prop7,
+		prop8,
+		prop9,
+		prop10
+	</sql>
+	<sql id="insertTopicSql">
+		topic_introduction,
+		topic_title,
+		topic_content,
+		user_id,
+		forum_id,
+	    topic_type,
+		prop1,
+		prop2,
+		prop3,
+		prop4,
+		prop5,
+		prop6,
+		prop7,
+		prop8,
+		prop9,
+		prop10
+	</sql>
+	<insert id="insertTopic" parameterType="Map">
+		INSERT INTO topic (<include refid="insertTopicSql" />)
+		VALUES(
+			#{topic_introduction},
+			#{topic_title},
+			#{topic_content},
+			#{user_id},
+			#{forum_id},
+			#{topic_type},
+			#{prop1},
+			#{prop2},
+			#{prop3},
+			#{prop4},
+			#{prop5},
+			#{prop6},
+			#{prop7},
+			#{prop8},
+			#{prop9},
+			#{prop10}
+		) 
+	</insert>
+	
+	<select id="listTopicByCondition" parameterType="Map" resultType="TopicEntity">
+		SELECT <include refid="defaultTopicSql" />
+		FROM topic
+		<where>
+			<if test="topic_id != null">
+				AND topic_id = #{topic_id}
+			</if>
+			<if test="topic_introduction != null and topic_introduction != ''">
+				<bind name="topicIntroduction" value="'%' + topic_introduction + '%'"/>
+				AND topic_introduction LIKE #{topicIntroduction}
+			</if>
+			<if test="topic_title != null and topic_title != ''">
+				<bind name="topicTitle" value="'%' + topic_title + '%'" />
+				AND topic_title LIKE #{topicTitle}
+			</if>
+			<if test="topic_content != null">
+				<bind name="topic_content" value="'%' + topic_content + '%'" />
+				AND topic_content LIKE #{topic_content}
+			</if>
+			<if test="topic_type != null">
+				AND topic_type = #{topic_type}
+			</if>
+			<if test="topic_view_num != null">
+				AND topic_view_num = #{topic_view_num}
+			</if>
+			<if test="topic_status != null">
+				AND topic_status = #{topic_status}
+			</if>			
+			<if test="topic_good_num != null">
+				AND topic_good_num = #{topic_good_num}
+			</if>
+			<if test="user_id != null">
+				AND user_id = #{user_id}
+			</if>
+			<if test="forum_id != null">
+				AND forum_id = #{forum_id}
+			</if>
+			<if test="prop1 != null and prop1 != ''">
+				AND prop1 = #{prop1}
+			</if>
+			<if test="prop2 != null and prop2 != ''">
+				AND prop2 = #{prop2}
+			</if>
+			<if test="prop3 != null and prop3 != ''">
+				AND prop3 = #{prop3}
+			</if>
+			<if test="prop4 != null and prop4 != ''">
+				AND prop4 = #{prop4}
+			</if>
+			<if test="prop5 != null and prop5 != ''">
+				AND prop5 = #{prop5}
+			</if>
+			<if test="prop6 != null and prop6 != ''">
+				AND prop6 = #{prop6}
+			</if>
+			<if test="prop7 != null and prop7 != ''">
+				AND prop7 = #{prop7}
+			</if>
+			<if test="prop8 != null and prop8 != ''">
+				AND prop8 = #{prop8}
+			</if>
+			<if test="prop9 != null and prop9 != ''">
+				AND prop9 = #{prop9}
+			</if>
+			<if test="prop10 != null and prop10 != ''">
+				AND prop10 = #{prop10}
+			</if>
+		</where>
+		<if test="start != null and size != null">
+			LIMIT #{start}, #{size}
+		</if>
+	</select>
+	
+	<update id="updateTopicByCondition" parameterType="Map">
+		UPDATE topic
+		<set>
+			<if test="topic_introduction != null and topic_introduction != ''">
+				topic_introduction = #{topic_introduction},
+			</if>
+			<if test="topic_title != null and topic_title != ''">
+				topic_title = #{topic_title},
+			</if>
+			<if test="topic_content != null and topic_content != ''">
+				topic_content = #{topic_content},
+			</if>		
+			<if test="topic_type != null">
+				topic_type = #{topic_type},
+			</if>
+			<if test="topic_status != null">
+				topic_status = #{topic_status},
+			</if>
+			<if test="prop1 != null and prop1 != ''">
+				prop1 = #{prop1},
+			</if>
+			<if test="prop2 != null and prop2 != ''">
+				prop2 = #{prop2},
+			</if>
+			<if test="prop3 != null and prop3 != ''">
+				prop3 = #{prop3},
+			</if>
+			<if test="prop4 != null and prop4 != ''">
+				prop4 = #{prop4},
+			</if>				
+			<if test="prop5 != null and prop5 != ''">
+				prop5 = #{prop5},
+			</if>			
+			<if test="prop6 != null and prop6 != ''">
+				prop6 = #{prop6},
+			</if>			
+			<if test="prop7 != null and prop7 != ''">
+				prop7 = #{prop7},
+			</if>			
+			<if test="prop8 != null and prop8 != ''">
+				prop8 = #{prop8},
+			</if>			
+			<if test="prop9 != null and prop9 != ''">
+				prop9 = #{prop9},
+			</if>			
+			<if test="prop10 != null and prop10 != ''">
+				prop10 = #{prop10},
+			</if>			
+		</set>
+		WHERE topic_id = #{topic_id}
+	</update>
+<!--topic_id;
+	topic_title;
+	forum_id;
+	forum_name;
+	view_num;
+	reply_num;
+	publish_time;
+	topic_type;-->
+
+	<select id="listSimpleTopicByCondition" parameterType="Map" resultType="java.util.HashMap">
+		SELECT
+		t.topic_id       AS topic_id,
+		t.topic_title    AS topic_title,
+		t.topic_view_num AS view_num,
+		(SELECT count(reply_id) FROM reply WHERE reply.topic_id = t.topic_id) AS reply_num,
+		date_format(t.topic_publish_time,'%Y-%m-%d %H:%i:%s') AS publish_time,
+		f.forum_id   AS forum_id,
+		f.forum_name AS forum_name,
+		t.prop1 AS prop1
+		FROM topic   AS t
+		INNER JOIN forum AS f
+		ON t.forum_id = f.forum_id
+		<where>
+			<if test="forum_id != null">
+				AND t.forum_id = #{forum_id}
+			</if>
+			<if test="topic_title != null">
+				<bind name="topicTitle" value="'%' + topic_title + '%'" />
+				AND t.topic_title LIKE #{topicTitle}
+			</if>
+			<if test="user_id != null">
+				AND t.user_id = #{user_id}
+			</if>
+			<if test="topic_status != null">
+				AND t.topic_status = #{topic_status}
+			</if>
+			<if test="topic_type != null">
+				AND t.topic_type = #{topic_type}
+			</if>
+			<if test="prop1 != null">
+				AND t.prop1 = #{prop1}
+			</if>
+			<if test="prop1s != null">
+				AND t.prop1 IN
+				<foreach collection="prop1s" item="prop1" index="index" separator="," open="(" close=")">
+					#{prop1}
+				</foreach>
+			</if>
+      		<if test="topic_types != null">
+				AND t.topic_type IN
+				<foreach collection="topic_types" item="topicType" index="index" separator="," open="(" close=")">
+					#{topicType}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY t.topic_publish_time DESC
+		<if test="start != null and size != null">
+			LIMIT #{start}, #{size}
+		</if>
+	</select>
+
+	<select id="getTopicCountByCondition" parameterType="Map" resultType="int">
+		SELECT count(topic_id) FROM topic
+		<where>
+			<if test="prop1 != null">
+				AND prop1 = #{prop1}
+			</if>
+			<if test="topic_type != null">
+				AND topic_type = #{topic_type}
+			</if>
+			<if test="user_id != null">
+				AND user_id = #{user_id}
+			</if>
+			<if test="topic_title != null">
+				<bind name="topicTitle" value="'%' + topic_title + '%'" />
+				AND topic_title LIKE #{topicTitle}
+			</if>
+			<if test="forum_id != null">
+				AND forum_id = #{forum_id}
+			</if>
+			<if test="topic_status != null">
+				AND topic_status = #{topic_status}
+			</if>
+			<if test="prop1s != null">
+				AND prop1 IN
+				<foreach collection="prop1s" item="prop1" index="index" separator="," open="(" close=")">
+					#{prop1}
+				</foreach>
+			</if>
+			<if test="topic_types != null">
+				AND topic_type IN
+				<foreach collection="topic_types" item="topicType" index="index" separator="," open="(" close=")">
+					#{topicType}
+				</foreach>
+			</if>
+		</where>
+	</select>
+<!--	private Integer user_id;
+	private String user_ico_url;
+	private String user_name;
+	private String user_sex;
+
+	private Integer topic_id;
+	private String  topic_title;
+	private String publish_time;
+	private String publish_content;
+
+	private String forum_name;
+	// 楼层
+	private Integer reply_floor;
+	// 标识：0 楼主, 1 回复,
+	private int sign;-->
+	<select id="getTopicInfoById" resultType="java.util.HashMap" parameterType="Integer">
+		SELECT
+			u.user_id   AS user_id,
+			u.user_name AS user_name,
+			CASE u.user_sex
+				WHEN 0 THEN ''
+				WHEN 1 THEN '男'
+				WHEN 2 THEN '女'
+			END AS user_sex,
+			u.user_ico_url AS user_ico_url,
+			t.topic_id     AS topic_id,
+			t.topic_title  AS topic_title,
+			(SELECT count(reply_id) FROM reply WHERE reply.topic_id = t.topic_id) AS reply_num,
+			date_format(t.topic_publish_time,'%Y-%m-%d %H:%i:%s') AS publish_time,
+			t.topic_content AS publish_content,
+			f.forum_name AS forum_name,
+			0 AS sign,
+			t.prop1 AS prop1,
+			u.user_introduction AS user_introduction
+		FROM topic AS t
+		INNER JOIN forum AS f
+		ON t.forum_id = f.forum_id
+		INNER JOIN user AS u
+		ON t.user_id = u.user_id
+		WHERE t.topic_id = #{topic_id}
+	</select>
+</mapper>

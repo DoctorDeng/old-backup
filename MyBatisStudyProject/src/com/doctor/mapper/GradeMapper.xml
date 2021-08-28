@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="com.doctor.mapper.GradeMapper">
+		<resultMap type="Grade" id="GradeResultMap">
+			<id property="gradeId" column="gradeId" javaType="int" jdbcType="NUMERIC"/>
+			<result property="gradeName" column="gradeName" javaType="String" jdbcType="VARCHAR"/>
+			<collection property="students"  column="gradeId" 
+			select="com.doctor.mapper.StudentMapper.selectStudentsByGradeId" />
+		</resultMap>
+		
+		<select id="selectGradeById" parameterType="int" resultMap="GradeResultMap">
+			SELECT * FROM grade where gradeId = #{gradeId}
+		</select>
+	</mapper>

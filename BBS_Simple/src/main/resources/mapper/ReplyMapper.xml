@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 将Mapper和对应的Dao绑定 -->
+<mapper namespace="vip.doctordeng.bbs.dao.ReplyDao">
+	<sql id="defaultReplySql">
+		reply_id,
+		topic_id,
+		reply_content,
+		reply_time,
+		user_id,
+		reply_status,
+		prop1,
+		prop2,
+		prop3,
+		prop4,
+		prop5,
+		prop6,
+		prop7,
+		prop8,
+		prop9,
+		prop10
+	</sql>
+	<sql id="insertReplySql">
+		topic_id,
+		reply_content,
+		user_id,
+		reply_user_id,
+		prop1,
+		prop2,
+		prop3,
+		prop4,
+		prop5,
+		prop6,
+		prop7,
+		prop8,
+		prop9,
+		prop10
+	</sql>
+
+	<insert id="insertReply" parameterType="ReplyEntity">
+		INSERT INTO reply (<include refid="insertReplySql" />)
+		VALUES (
+			#{topic_id},
+			#{reply_content},
+			#{user_id},
+			#{reply_user_id},
+			#{prop1},
+			#{prop2},
+			#{prop3},
+			#{prop4},
+			#{prop5},
+			#{prop6},
+			#{prop7},
+			#{prop8},
+			#{prop9},
+			#{prop10}
+		)
+	</insert>
+
+	<select id="listReplyByCondition" parameterType="Map" resultType="ReplyEntity">
+		SELECT <include refid="defaultReplySql" />
+		FROM reply
+		<where>
+			<if test="topic_id != null">
+				AND topic_id = #{topic_id}
+			</if>
+			<if test="reply_content != null and reply_content != '' ">
+				<bind name="content" value="'%' + reply_content + '%'"/>
+				AND reply_content like #{content}
+			</if>
+			<if test="user_id != null">
+				AND user_id = #{user_id}
+			</if>
+			<if test="reply_user_id != null">
+				AND reply_user_id = #{reply_user_id}
+			</if>
+			<if test="reply_status != null">
+				AND reply_status = #{reply_status}
+			</if>
+		</where>
+	</select>
+
+	<select id="getReplyCountByCondition" parameterType="Map" resultType="int">
+		SELECT count(reply_id) FROM reply
+		<where>
+			<if test="reply_status != null">
+				AND reply_status = #{reply_status}
+			</if>
+			<if test="reply_user_id != null">
+				AND reply_user_id = #{reply_user_id}
+			</if>
+			<if test="user_id != null">
+				AND user_id = #{user_id}
+			</if>
+			<if test="topic_id != null">
+				AND topic_id = #{topic_id}
+			</if>
+			<if test="prop1 != null and prop1 != ''">
+				AND prop1 = #{prop1}
+			</if>
+			<if test="prop2 != null and prop2 != ''">
+				AND prop2 = #{prop2}
+			</if>
+			<if test="prop3 != null and prop3 != ''">
+				AND prop3 = #{prop3}
+			</if>
+			<if test="prop4 != null and prop4 != ''">
+				AND prop4 = #{prop4}
+			</if>
+			<if test="prop5 != null and prop5 != ''">
+				AND prop5 = #{prop5}
+			</if>
+			<if test="prop6 != null and prop6 != ''">
+				AND prop6 = #{prop6}
+			</if>
+			<if test="prop7 != null and prop7 != ''">
+				AND prop7 = #{prop7}
+			</if>
+			<if test="prop8 != null and prop8 != ''">
+				AND prop8 = #{prop8}
+			</if>
+			<if test="prop9 != null and prop9 != ''">
+				AND prop9 = #{prop9}
+			</if>
+			<if test="prop10 != null and prop10 != ''">
+				AND prop10 = #{prop10}
+			</if>
+		</where>
+	</select>
+<!--	private Integer user_id;
+	private String user_ico_url;
+	private String user_name;
+	private String user_sex;
+
+	private Integer topic_id;
+	private String  topic_title;
+	private String publish_time;
+	private String publish_content;
+
+	private String forum_name;
+	// 楼层
+	private Integer reply_floor;
+	// 标识：0 楼主, 1 回复,
+	private int sign;-->
+<!--	u.user_id AS user_id,
+	u.user_name AS user_name,
+	CASE u.user_sex
+	WHEN 0 THEN ''
+	WHEN 1 THEN '男'
+	WHEN 2 THEN '女'
+	END AS user_sex,
+	t.topic_id AS topic_id,
+	t.topic_title AS topic_title,
+	date_format(t.topic_publish_time,'%Y-%m-%d %k:%m:%s') AS publish_time,
+	t.topic_content AS publish_content,
+	f.forum_name AS forum_name,
+	0 AS sign-->
+	<select id="listReplyInfoByCondition" resultType="java.util.HashMap" parameterType="Map">
+        SELECT
+            u.user_id   AS user_id,
+            u.user_name AS user_name,
+            CASE u.user_sex
+            WHEN 0 THEN ''
+            WHEN 1 THEN '男'
+            WHEN 2 THEN '女'
+            END AS user_sex,
+            u.user_ico_url AS user_ico_url,
+            date_format(r.reply_time,'%Y-%m-%d %k:%m:%s') AS publish_time,
+            <![CDATA[
+                (SELECT count(reply_id) + 1 FROM reply
+                WHERE reply.topic_id = r.topic_id AND reply.reply_time < r.reply_time) AS reply_floor
+            ]]>,
+            r.reply_content AS publish_content,
+			1 AS sign,
+			u.user_introduction AS user_introduction
+        FROM reply AS r
+            INNER JOIN user AS u
+                ON r.user_id = u.user_id
+            <where>
+                <if test="topic_id != null">
+                AND r.topic_id = #{topic_id}
+                </if>
+                <if test="reply_user_id != null">
+                AND r.reply_user_id = #{reply_user_id}
+                </if>
+                <if test="reply_status != null">
+                AND r.relpy_status = #{reply_status}
+                </if>
+            </where>
+        ORDER BY r.reply_time ASC
+        <if test="start != null and size != null">
+          LIMIT #{start}, #{size}
+        </if>
+	</select>
+</mapper>
