@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 目标Bean -->
+    <bean id="saveImplTarget" class="practice.springapi.pointcut.SaveImpl" />
+    
+    <!-- 配置 通知Bean等 -->
+    <bean id="testAfterReturningAdvice" class="practice.springapi.pointcut.TestAfterReturningAdvice" />
+    <bean id="testBeforeAdvice" class="practice.springapi.pointcut.TestBeforeAdvice" />
+    <bean id="testThrowsAdvice" class="practice.springapi.pointcut.TestThrowsAdvice" />
+    <bean id="testMethodInterceptor" class="practice.springapi.pointcut.TestMethodInterceptor" />
+    <!-- 配置切入点表达式的Bean -->
+   <!--  <bean id="pointcutBean" class="org.springframework.aop.support.NameMatchMethodPointcut">
+        <property name="mappedNames">
+            <list> -->
+                <!-- 匹配所有名称以 sa 开头的方法-->
+    <!--             <value>sa*</value>
+            </list>
+        </property>
+    </bean> -->
+    <!-- 配置默认的 advisor -->
+    <!-- <bean id="defaultAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="testBeforeAdvice" />   
+		<property name="pointcut" ref="pointcutBean" />     
+    </bean> -->
+    
+   <!--  <bean id="saveImpl" class="org.springframework.aop.framework.ProxyFactoryBean"> -->
+        <!-- 最终获取的 Bean 是通过此处配置的,此处 Bean 就是通过 ProxyFactoryBean 的 getObject()方法获得的 -->
+   <!--      <property name="target" > 
+            <ref bean="saveImplTarget" />
+        </property> -->
+        <!-- 自定代理的接口 
+        	这样可以不用使用切入点表达式,而为指定的 Bean 配置通知等。
+        -->
+        <!-- <property name="proxyInterfaces">
+            <value>practice.springapi.pointcut.Save</value>
+        </property> -->
+        <!-- 配置在 Bean 上的通知等 -->
+<!--         <property name="interceptorNames">
+			<list> -->
+			    <!-- <value>defaultAdvisor</value> -->
+			   <!--  <value>testAfterReturningAdvice</value>
+			    <value>testThrowsAdvice</value>
+			    <value>testMethodInterceptor</value> -->
+			    <!-- 匹配所有的名称以 test开头的拦截器，不是advisor -->
+	<!-- 		    <value>test*</value>
+			</list>            
+        </property>
+    </bean> -->
+    
+    <bean id="baseProxyBean" class="org.springframework.aop.framework.ProxyFactoryBean" lazy-init="true" abstract="true"></bean>
+	<bean id="saveImpl" parent="baseProxyBean">
+	    <property name="target">
+	        <bean class="practice.springapi.pointcut.SaveImpl" />
+	    </property>
+	    <property name="proxyInterfaces">
+	        <value>practice.springapi.pointcut.Save</value>
+	    </property>
+	    <property name="interceptorNames">
+			<list>
+			    <value>testBeforeAdvice</value>
+			    <value>testAfterReturningAdvice</value>
+			    <value>testMethodInterceptor</value>
+			    <value>testThrowsAdvice</value>
+			</list>	        
+	    </property>
+	</bean>
+</beans>

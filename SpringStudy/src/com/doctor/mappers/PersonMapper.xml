@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 将Mapper和对应的Dao绑定 -->
+<mapper namespace="com.doctor.dao.PersonDao">
+	<sql id="personSql">
+		personId,personName,personAge,personSex
+	</sql>
+	<select id="selectPerson" parameterType="Map" resultType="Person">
+		 SELECT <include refid="personSql" /> 
+		 FROM  person
+		 <where>
+		 	<if test="personId != null and '' != personId">
+		 		AND personId = #{personId} 
+		 	</if>
+		 	<if test="personName != null and '' != personName">
+		 		AND personName like CONCAT(CONCAT('%',#{personName}),'%') 
+		 	</if>
+		 	<if test="personSex != null and '' != personSex">
+		 		AND personSex = #{personSex} 
+		 	</if>
+		 	<if test="personAge != null and '' != personAge">
+		 		AND personAge = #{personAge} 
+		 	</if>
+		 </where> 
+		 <if test="index != null and size != null">
+		 	LIMIT #{index},#{size}
+		 </if>
+	</select>
+	
+	<delete id="deletePerson" parameterType="Map">
+		DELETE FROM person 
+		<where>
+			<if test="personId != null and '' != personId">
+				AND personId = #{personId}
+			</if>
+			<if test="personIds != null and '' != personIds">
+				OR personId  IN
+				<foreach item="personId"  index="index" collection="personIds"
+      				open="(" separator="," close=")">
+       			 #{psersonId}
+ 			 </foreach>
+			</if>
+		</where>
+	</delete>
+	
+	<update id="updatePerson" parameterType="Map">
+		UPDATE person 
+		<set>
+		 	<if test="personName != null and '' != personName">
+		 		personName = #{personName},
+		 	</if>
+		 	<if test="personSex != null and '' != personSex">
+		 		personSex = #{personSex}, 
+		 	</if>
+		 	<if test="personAge != null and '' != personAge">
+		 		personAge = #{personAge},
+		 	</if>		
+		</set>
+		WHERE personId = #{personId}
+	</update>
+	
+	<insert id="insertPerson" parameterType="Map">
+		INSERT INTO person (<include refid="personSql" />)
+		VALUES 
+		<foreach item="person" index="index" collection="persons"
+      			separator=",">
+       			(null,#{person.personName},#{person.personAge},#{person.personSex})
+ 		</foreach>
+	</insert>
+</mapper>

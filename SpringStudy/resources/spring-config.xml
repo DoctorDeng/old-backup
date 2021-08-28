@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/jee
+    http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    
+     <!-- 上下文内容扫描(controller) 扫描基础包及其子包 -->
+    <context:component-scan base-package="com.doctor.controller"></context:component-scan>
+    <!-- 注解驱动,会自动注册几个bean,其中一个功能：把对象和json进行转化 -->
+    <mvc:annotation-driven />
+    
+    <!-- spring静态资源配置 -->
+	<mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
+	
+    <!-- 视图转换器 ViewResolver
+    	一个 DispatcherServlet 可以配置多个  ViewResolver
+    	它们通过使用 order 属性排序
+    	InternalResourceViewResolver 放在最后
+     -->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+    	<!-- 自动加上视图页面(.jsp)前缀 -->
+    	<property name="prefix" value="/WEB-INF/jsp/"/>
+    	<!-- 自动加上视图页面(.jsp)后缀 -->
+    	<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 文件上传视图解析器 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 定义上传文件的大小单位：字节 -->
+		<property name="maxUploadSize" value="102410241024" />
+		<!-- 设置上传文件默认格式 -->
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- 设置延迟解析上传文件已提高性能-->
+		<property name="resolveLazily" value="true" />
+	</bean>
+	<!-- 注册拦截器
+	    当配置的拦截器没有执行的时候, 注意拦截器配置的位置
+	    一般拦截器的配置是放在与 dispatcher 相关的配置文件中
+	    而不是全局上下文文件(如：applicationContext.xml)中
+	  原因：拦截器是针对
+	-->
+    <mvc:interceptors>
+    	<!-- 配置单个拦截器, 默认拦截所有 Controller -->
+    	<!-- <bean class="com.doctor.interceptor.TestInterceptor"></bean> -->
+    	<!-- 配置拦截器拦截路径 -->
+    	<mvc:interceptor>
+    	<!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller --> 
+    		<mvc:mapping path="/**"/>
+    		<!-- 排除不需要拦截的目录 -->
+    		<!-- <mvc:exclude-mapping path="login"/> -->
+    		<bean id="testInterceptor" class="com.doctor.interceptor.TestInterceptor"></bean>
+    	</mvc:interceptor>
+    	  <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 --> 
+    </mvc:interceptors>
+</beans>

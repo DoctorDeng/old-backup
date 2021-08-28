@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 将Mapper和对应的Dao绑定 -->
+<mapper namespace="com.doctor.dao.UserDao">
+	<!--  <select id="selectUserByNameAndPassword" parameterType="Map" resultType="User">
+		SELECT userId, userName, password FROM user 
+		WHERE userName = #{userName} 
+		AND password = #{password}
+	</select>  -->
+	<resultMap type="User" id="UserResultMap">
+			<id property="userId" column="suid" jdbcType="NUMERIC" javaType="int" />
+			<result property="userName" column="usercode" jdbcType="VARCHAR" javaType="String"/>
+			<result property="password" column="userpass" jdbcType="VARCHAR" javaType="String"/>
+	</resultMap>
+	
+	<select id="selectUserByNameAndPassword" parameterType="Map" resultMap="UserResultMap">
+		select suid,usercode,userpass from AC_SYS_USER 
+		where USERCODE=#{userName} 
+		and USERPASS=#{password} and status=1
+	</select>
+	<!-- <select id="selectUserByNameAndPassword" parameterType="Map" resultType="User">
+		SELECT userId, userName, password FROM user 
+		WHERE userName = #{userName} 
+		AND password = #{password}
+	</select> -->
+</mapper>	

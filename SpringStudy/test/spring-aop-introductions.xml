@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+    <!--  切面类 -->
+    <bean id="aspectTest" class="practice.aopTest.AspectTest" />
+    <bean id="testIntroduction" class="practice.introductions.test.TestIntroduction" />
+    <aop:config>
+    	<aop:aspect id="ap" ref="aspectTest" >
+    	    <!-- 
+    	    	types-matching: 匹配表达式
+    	    	 practice.introductions.test.*(+): 匹配test包下所有类的所有方法
+    	    	 
+    	    	implement-interface: 实现接口
+    	    	default-impl: 实现上面接口的类
+    	     -->
+    	    <aop:declare-parents types-matching="practice.introductions.test.*(+)" implement-interface="practice.introductions.Father" default-impl="practice.introductions.Child1"/>
+    	</aop:aspect>
+    </aop:config>
+</beans>
